@@ -1,67 +1,5 @@
-import { VideoCard } from "@/components/VideoCard";
 import { TrendingUp, Flame, Award } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import thumbCoding from "@/assets/thumb-coding.jpg";
-import thumbTravel from "@/assets/thumb-travel.jpg";
-import thumbCooking from "@/assets/thumb-cooking.jpg";
-import thumbGaming from "@/assets/thumb-gaming.jpg";
-
-const trendingVideos = [
-  {
-    title: "This AI Tool Will Replace Programmers (No Clickbait)",
-    creator: "FutureTech",
-    views: "4.2M",
-    duration: "16:43",
-    thumbnail: thumbCoding,
-    uploadTime: "12 hours ago",
-  },
-  {
-    title: "I Traveled to the Most DANGEROUS Place on Earth",
-    creator: "ExtremeAdventures",
-    views: "8.7M",
-    duration: "24:18",
-    thumbnail: thumbTravel,
-    uploadTime: "1 day ago",
-  },
-  {
-    title: "Gordon Ramsay Tries My Cooking (He Was SHOCKED)",
-    creator: "HomeCook",
-    views: "12.4M",
-    duration: "19:55",
-    thumbnail: thumbCooking,
-    uploadTime: "6 hours ago",
-  },
-];
-
-const gamingTrending = [
-  {
-    title: "New Game Breaks the Internet | First Look Gameplay",
-    creator: "GameCentral",
-    views: "6.1M",
-    duration: "32:12",
-    thumbnail: thumbGaming,
-    uploadTime: "4 hours ago",
-  },
-  {
-    title: "I Built the Ultimate Gaming Room for $50,000",
-    creator: "SetupKing",
-    views: "3.8M",
-    duration: "21:34",
-    thumbnail: thumbGaming,
-    uploadTime: "2 days ago",
-  },
-];
-
-const musicTrending = [
-  {
-    title: "Behind the Scenes: Making My New Song",
-    creator: "MusicMaker",
-    views: "2.9M",
-    duration: "14:27",
-    thumbnail: thumbCoding,
-    uploadTime: "8 hours ago",
-  },
-];
 
 export const Trending = () => {
   return (
@@ -93,52 +31,50 @@ export const Trending = () => {
         </TabsList>
 
         <TabsContent value="all" className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Flame className="w-5 h-5 text-primary" />
-              Trending Now
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {trendingVideos.map((video, index) => (
-                <VideoCard key={index} {...video} />
-              ))}
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Flame className="w-16 h-16 text-muted-foreground mb-6" />
+            <h3 className="text-xl font-semibold mb-2">No trending videos</h3>
+            <p className="text-muted-foreground max-w-md">
+              Trending videos will appear here as the developer community grows and shares content.
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="gaming" className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Gaming Trending</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {gamingTrending.map((video, index) => (
-                <VideoCard key={index} {...video} />
-              ))}
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-muted-foreground" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M21.58 16.09l-1.09-7.66A3.996 3.996 0 0016.53 5H7.47C5.48 5 3.79 6.46 3.51 8.43L2.42 16.09c-.15 1.05.27 2.13 1.06 2.87.79.74 1.9 1.04 2.95.78l.7-.17c1.23-.3 2.56.36 2.97 1.48l.27.74c.18.5.65.87 1.18.95.06.01.12.01.18.01.47 0 .93-.19 1.26-.53l.81-.81c.39-.39 1.02-.39 1.41 0l.81.81c.33.34.79.53 1.26.53.06 0 .12 0 .18-.01.53-.08 1-.45 1.18-.95l.27-.74c.41-1.12 1.74-1.78 2.97-1.48l.7.17c1.05.26 2.16-.04 2.95-.78.79-.74 1.21-1.82 1.06-2.87zM9 11c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm0-3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm3 3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm3 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm0-3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+              </svg>
             </div>
+            <h3 className="text-xl font-semibold mb-2">No gaming content yet</h3>
+            <p className="text-muted-foreground max-w-md">
+              Gaming and tech review content will show up here as creators upload videos.
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="music" className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Music Trending</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {musicTrending.map((video, index) => (
-                <VideoCard key={index} {...video} />
-              ))}
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-muted-foreground" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
             </div>
+            <h3 className="text-xl font-semibold mb-2">No music content yet</h3>
+            <p className="text-muted-foreground max-w-md">
+              Music production and audio development content will appear here.
+            </p>
           </div>
         </TabsContent>
 
         <TabsContent value="top" className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-primary" />
-              Top Videos This Week
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {trendingVideos.slice(0, 2).map((video, index) => (
-                <VideoCard key={index} {...video} />
-              ))}
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Award className="w-16 h-16 text-muted-foreground mb-6" />
+            <h3 className="text-xl font-semibold mb-2">No top videos yet</h3>
+            <p className="text-muted-foreground max-w-md">
+              The most popular videos from the developer community will be featured here.
+            </p>
           </div>
         </TabsContent>
       </Tabs>

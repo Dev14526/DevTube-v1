@@ -1,76 +1,3 @@
-import { VideoCard } from "@/components/VideoCard";
-import thumbCoding from "@/assets/thumb-coding.jpg";
-import thumbTravel from "@/assets/thumb-travel.jpg";
-import thumbCooking from "@/assets/thumb-cooking.jpg";
-import thumbGaming from "@/assets/thumb-gaming.jpg";
-
-const sampleVideos = [
-  {
-    title: "Full Stack Development Tutorial: Building a Modern Web App",
-    creator: "CodeMaster",
-    views: "1.2M",
-    duration: "28:45",
-    thumbnail: thumbCoding,
-    uploadTime: "2 days ago",
-  },
-  {
-    title: "Epic Mountain Adventure: Hiking the Swiss Alps",
-    creator: "WanderLust",
-    views: "892K",
-    duration: "15:32",
-    thumbnail: thumbTravel,
-    uploadTime: "1 week ago",
-  },
-  {
-    title: "Perfect Homemade Pizza Recipe | Step by Step Guide",
-    creator: "ChefLife",
-    views: "2.4M",
-    duration: "12:18",
-    thumbnail: thumbCooking,
-    uploadTime: "3 days ago",
-  },
-  {
-    title: "INSANE Gaming Setup Tour 2024 | RGB Overload",
-    creator: "TechGamer",
-    views: "567K",
-    duration: "18:05",
-    thumbnail: thumbGaming,
-    uploadTime: "5 days ago",
-  },
-  {
-    title: "Learning React in 2024: Complete Beginner's Guide",
-    creator: "DevTutorials",
-    views: "834K",
-    duration: "35:12",
-    thumbnail: thumbCoding,
-    uploadTime: "1 day ago",
-  },
-  {
-    title: "Sunrise Time-lapse from Mount Everest Base Camp",
-    creator: "NatureFilms",
-    views: "3.1M",
-    duration: "8:45",
-    thumbnail: thumbTravel,
-    uploadTime: "4 days ago",
-  },
-  {
-    title: "5-Minute Chocolate Cake Recipe That Actually Works",
-    creator: "QuickBites",
-    views: "1.8M",
-    duration: "6:23",
-    thumbnail: thumbCooking,
-    uploadTime: "2 days ago",
-  },
-  {
-    title: "NEW GPU Benchmarks: RTX 4090 vs RTX 4080",
-    creator: "TechReviews",
-    views: "945K",
-    duration: "22:17",
-    thumbnail: thumbGaming,
-    uploadTime: "6 days ago",
-  },
-];
-
 export const Home = () => {
   return (
     <div className="p-6">
@@ -79,10 +6,16 @@ export const Home = () => {
         <p className="text-muted-foreground">Videos we think you'll enjoy</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {sampleVideos.map((video, index) => (
-          <VideoCard key={index} {...video} />
-        ))}
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+          <svg className="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 className="text-xl font-semibold mb-2">No videos yet</h3>
+        <p className="text-muted-foreground max-w-md">
+          Start uploading your developer content to see it here. Share tutorials, coding sessions, and tech talks with the community.
+        </p>
       </div>
     </div>
   );

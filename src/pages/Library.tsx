@@ -1,67 +1,36 @@
-import { VideoCard } from "@/components/VideoCard";
 import { History, Clock, ThumbsUp, PlaySquare, Download } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import thumbCoding from "@/assets/thumb-coding.jpg";
-import thumbTravel from "@/assets/thumb-travel.jpg";
-import thumbCooking from "@/assets/thumb-cooking.jpg";
+import { Card, CardContent } from "@/components/ui/card";
 
 const libraryItems = [
   {
     icon: History,
     title: "Watch History",
-    count: "247 videos",
+    count: "0 videos",
     color: "text-blue-500",
   },
   {
     icon: Clock,
     title: "Watch Later",
-    count: "18 videos",
+    count: "0 videos",
     color: "text-yellow-500",
   },
   {
     icon: ThumbsUp,
     title: "Liked Videos",
-    count: "89 videos",
+    count: "0 videos",
     color: "text-green-500",
   },
   {
     icon: PlaySquare,
     title: "Your Videos",
-    count: "12 videos",
+    count: "0 videos",
     color: "text-primary",
   },
   {
     icon: Download,
     title: "Downloads",
-    count: "5 videos",
+    count: "0 videos",
     color: "text-purple-500",
-  },
-];
-
-const recentVideos = [
-  {
-    title: "Advanced React Patterns You Should Know",
-    creator: "ReactPro",
-    views: "445K",
-    duration: "42:15",
-    thumbnail: thumbCoding,
-    uploadTime: "Watched yesterday",
-  },
-  {
-    title: "Backpacking Through Europe on $50/Day",
-    creator: "BudgetTravel",
-    views: "1.1M",
-    duration: "28:33",
-    thumbnail: thumbTravel,
-    uploadTime: "Watched 2 days ago",
-  },
-  {
-    title: "Master Class: French Pastry Techniques",
-    creator: "BakingMaster",
-    views: "678K",
-    duration: "55:22",
-    thumbnail: thumbCooking,
-    uploadTime: "Watched 3 days ago",
   },
 ];
 
@@ -95,10 +64,12 @@ export const Library = () => {
           <History className="w-5 h-5 text-primary" />
           Recently Watched
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {recentVideos.map((video, index) => (
-            <VideoCard key={index} {...video} />
-          ))}
+        <div className="bg-muted/50 border border-border rounded-lg p-8 text-center">
+          <History className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">No watch history</h3>
+          <p className="text-muted-foreground">
+            Videos you watch will appear here for easy access later.
+          </p>
         </div>
       </div>
 

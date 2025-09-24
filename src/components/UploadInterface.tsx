@@ -145,9 +145,29 @@ export const UploadInterface = () => {
               <Label htmlFor="tags">Tags</Label>
               <Input
                 id="tags"
-                placeholder="comedy, gaming, tutorial"
+                placeholder="javascript, react, tutorial, coding"
                 className="bg-secondary border-border"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thumbnail">Thumbnail</Label>
+              <input
+                type="file"
+                accept="image/*"
+                id="thumbnail"
+                className="hidden"
+              />
+              <label
+                htmlFor="thumbnail"
+                className="flex items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors bg-secondary"
+              >
+                <div className="text-center">
+                  <Image className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">Upload thumbnail</p>
+                  <p className="text-xs text-muted-foreground mt-1">JPG, PNG (max 5MB)</p>
+                </div>
+              </label>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
