@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Upload, Video, Image, X } from "lucide-react";
+import { Upload, Video, Image, X, ArrowLeft, User, Home, Flame, Clock, LogOut, Settings, Menu, Bell, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Separator } from "@/components/ui/separator";
 
 export const UploadInterface = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [dragActive, setDragActive] = useState(false);
@@ -28,6 +29,11 @@ export const UploadInterface = () => {
     navigate('/auth');
     return null;
   }
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -149,11 +155,138 @@ export const UploadInterface = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Upload Video</h1>
-        <p className="text-muted-foreground">Share your content with the world</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Desktop Sidebar */}
+      <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-card border-r border-border hidden lg:block">
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="p-6 border-b border-border">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
+                <Video className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-bold text-foreground">DevTube</span>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <div className="space-y-2">
+              <Link 
+                to="/" 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              >
+                <Home className="w-5 h-5" />
+                Home
+              </Link>
+              <Link 
+                to="/trending" 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              >
+                <Flame className="w-5 h-5" />
+                Trending
+              </Link>
+              <Link 
+                to="/shorts" 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              >
+                <Video className="w-5 h-5" />
+                Shorts
+              </Link>
+              <Link 
+                to="/library" 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+              >
+                <Clock className="w-5 h-5" />
+                Library
+              </Link>
+            </div>
+
+            <Separator className="my-4" />
+
+            <div className="space-y-2">
+              <Link 
+                to="/upload" 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
+              >
+                <Upload className="w-5 h-5" />
+                Upload
+              </Link>
+              <button 
+                onClick={handleSignOut}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors w-full text-left"
+              >
+                <LogOut className="w-5 h-5" />
+                Sign Out
+              </button>
+            </div>
+          </nav>
+
+          {/* User Info */}
+          <div className="p-4 border-t border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  Upload Content
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="lg:ml-64">
+        {/* Header */}
+        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-sm border-b border-border">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="lg:hidden"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+              
+              <div className="flex items-center gap-2 lg:hidden">
+                <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
+                  <Video className="w-4 h-4 text-primary-foreground" />
+                </div>
+                <span className="text-lg font-bold text-foreground">DevTube</span>
+              </div>
+
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Home
+                </Button>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm">
+                <Bell className="w-5 h-5" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Settings className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Upload Content */}
+        <div className="p-6 max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Upload Video</h1>
+            <p className="text-muted-foreground">Share your content with the world</p>
+          </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upload Area */}
@@ -325,6 +458,8 @@ export const UploadInterface = () => {
           </CardContent>
         </Card>
       </div>
+        </div>
+      </main>
     </div>
   );
 };
