@@ -1,16 +1,33 @@
-import { Upload, Video, Image, X } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { Upload, Video, Image, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const UploadInterface = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isShorts, setIsShorts] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  if (!user) {
+    navigate('/auth');
+    return null;
+  }
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -35,6 +52,99 @@ export const UploadInterface = () => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setUploadedFile(e.target.files[0]);
+    }
+  };
+
+  const handleThumbnailSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setThumbnailFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!uploadedFile || !title.trim()) {
+      toast({
+        title: "Missing required fields",
+        description: "Please select a video file and enter a title",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // Upload video file
+      const videoFileName = `${user.id}/${Date.now()}_${uploadedFile.name}`;
+      const { data: videoData, error: videoError } = await supabase.storage
+        .from('videos')
+        .upload(videoFileName, uploadedFile);
+
+      if (videoError) throw videoError;
+
+      // Upload thumbnail if provided
+      let thumbnailUrl = null;
+      if (thumbnailFile) {
+        const thumbnailFileName = `${user.id}/${Date.now()}_${thumbnailFile.name}`;
+        const { data: thumbnailData, error: thumbnailError } = await supabase.storage
+          .from('thumbnails')
+          .upload(thumbnailFileName, thumbnailFile);
+
+        if (thumbnailError) throw thumbnailError;
+
+        const { data: thumbnailPublicData } = supabase.storage
+          .from('thumbnails')
+          .getPublicUrl(thumbnailData.path);
+        
+        thumbnailUrl = thumbnailPublicData.publicUrl;
+      }
+
+      // Get video public URL
+      const { data: videoPublicData } = supabase.storage
+        .from('videos')
+        .getPublicUrl(videoData.path);
+
+      // Save video metadata to database
+      const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+      
+      const { error: insertError } = await supabase
+        .from('videos')
+        .insert({
+          user_id: user.id,
+          title: title.trim(),
+          description: description.trim() || null,
+          video_url: videoPublicData.publicUrl,
+          thumbnail_url: thumbnailUrl,
+          is_shorts: isShorts,
+          tags: tagsArray.length > 0 ? tagsArray : null
+        });
+
+      if (insertError) throw insertError;
+
+      toast({
+        title: "Video uploaded successfully!",
+        description: "Your video has been uploaded and is now available."
+      });
+
+      // Reset form
+      setUploadedFile(null);
+      setThumbnailFile(null);
+      setTitle("");
+      setDescription("");
+      setTags("");
+      setIsShorts(false);
+
+      // Navigate to home
+      navigate('/');
+
+    } catch (error: any) {
+      toast({
+        title: "Upload failed",
+        description: error.message || "An error occurred while uploading your video",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -127,7 +237,10 @@ export const UploadInterface = () => {
               <Input
                 id="title"
                 placeholder="Enter video title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="bg-secondary border-border"
+                required
               />
             </div>
 
@@ -137,6 +250,8 @@ export const UploadInterface = () => {
                 id="description"
                 placeholder="Tell viewers about your video"
                 rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="bg-secondary border-border resize-none"
               />
             </div>
@@ -146,6 +261,8 @@ export const UploadInterface = () => {
               <Input
                 id="tags"
                 placeholder="javascript, react, tutorial, coding"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
                 className="bg-secondary border-border"
               />
             </div>
@@ -156,17 +273,28 @@ export const UploadInterface = () => {
                 type="file"
                 accept="image/*"
                 id="thumbnail"
+                onChange={handleThumbnailSelect}
                 className="hidden"
               />
               <label
                 htmlFor="thumbnail"
                 className="flex items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors bg-secondary"
               >
-                <div className="text-center">
-                  <Image className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">Upload thumbnail</p>
-                  <p className="text-xs text-muted-foreground mt-1">JPG, PNG (max 5MB)</p>
-                </div>
+                {thumbnailFile ? (
+                  <div className="text-center">
+                    <Image className="w-8 h-8 mx-auto mb-2 text-primary" />
+                    <p className="text-sm text-foreground">{thumbnailFile.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {(thumbnailFile.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <Image className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">Upload thumbnail</p>
+                    <p className="text-xs text-muted-foreground mt-1">JPG, PNG (max 5MB)</p>
+                  </div>
+                )}
               </label>
             </div>
 
@@ -185,9 +313,14 @@ export const UploadInterface = () => {
               <Switch checked={isShorts} onCheckedChange={setIsShorts} />
             </div>
 
-            <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
+            <Button 
+              onClick={handleUpload}
+              disabled={uploading || !uploadedFile || !title.trim()}
+              className="w-full bg-primary hover:bg-primary/90" 
+              size="lg"
+            >
               <Upload className="w-4 h-4 mr-2" />
-              Upload Video
+              {uploading ? 'Uploading...' : 'Upload Video'}
             </Button>
           </CardContent>
         </Card>
